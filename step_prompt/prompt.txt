@@ -1,0 +1,58 @@
+'''setp.1'''
+你是一个专业的编程人员，请帮我实现一个功能：
+	1.从一个网络接口（例如抖音千川的素材API）中拿到一张视频的preview url
+	2.将图片保存在腾讯云存储桶（COS）中，过期时间为180天
+	3.当用户请求preview url时返回cos存储地址，如果过期重新尝试存储；如果获取失败报错
+请先给我大致的思路
+
+'''setp.2'''
+请先帮我写一个大致的框架
+	1.创建一个prompt.py
+	2.创建一个VideoPreview的类且包含type hint;
+	3.创建一个set_image_preview方法'''将图片保存在腾讯云存储桶（COS）中的方法'''等待构造
+	4.get_image_preview'''从素材API中拿到视频的preview url的方法'''等待构造
+
+'''setp.2'''
+下面我们来构造set_image_preview方法：
+		1.在这个方法中，我需要调用qcloud_cos.CosConfig与qcloud_cos.CosConfig.CosS3Client这两个方法
+		2.这个方法中有几个必须填写的参数请帮我构造好：
+			secret_id'''用户的 SecretId'''
+			secret_key'''用户的 SecretKey'''
+			region'''默认为ap-beijing''' 
+			token '''默认为123'''
+			scheme'''默认为https'''
+			url'''默认为None'''
+			Key'''默认为None'''
+		3.使用CosConfig加载这些参数为函数config 
+		4.使用CosS3Client加载config为函数client
+		5.创建一个对象response使用client.create_bucket创建一个桶为'bucket-1250000000'
+		6.创建一个对象stream通过requests.get从一个url中拿到对象
+		7.通过对象response使用client.put_object上传，有三个参数第一个是Bucket'''为我们之前创建桶的名字'''，第二个Body'''默认是stream'''，第三个为Key'''文件名称'''
+		8.创建一个对象getlifecycle设置图像保存周期，通过client.put_bucket_lifecycle'''参数有Bucket=bucket-1250000000，LifecycleConfiguration={'Rule': ['Expiration': {'Days': 180},]}'''
+
+'''setp.3'''
+下面我们来构造get_image_preview方法
+		1.在这个方法中同样有几个参数请帮我构造好：
+			PATH'''请求地址默认/open_api/2/file/video/get/'''
+			netloc'''API请求的目标主机默认ad.oceanengine.com'''
+			ACCESS_TOKEN'''类型string，授权access_token'''
+			advertiser_id'''类型number，广告主ID'''
+			image_mode'''类型string，素材类型默认VIDEO_VERTICAL'''
+			tags'''类型string，素材标签默认搞笑'''
+			sources'''类型string，巨量纵横共享素材默认BP''' 
+		2.请帮我构建请求URL格式是scheme，netloc，PATH
+		3.请帮我构建请求json'''ACCESS_TOKEN,advertiser_id,image_mode,tags,sources也需要添加到json中'''
+		4.使用requests.get(url, headers=headers)发送请求并的到返回
+		5.我需要得到返回json中的poster_url作为get_image_preview的return'''视频首帧的图片，作为set_image_preview中的url参数，Key为url重的图片名称'''
+
+'''setp.4'''
+请给我完整的prompt.py代码，并且重构，代码风格必须遵循clean code，且包含try catch和logging，添加中文注释
+
+'''setp.5'''
+请帮助我创建test.py，且实现Unittest，对prompt.py的代码覆盖率越高越好,且包含success与fail；
+
+'''setp.6'''
+请务必帮助我检查一下代码
+
+'''setp.7'''
+请帮助我重构
