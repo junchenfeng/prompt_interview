@@ -1,0 +1,11 @@
+根据描述使用编程语言Python 3生成代码，任务描述用分隔符<task>进行表示。最终输出两个文件：code用于实现任务描述，test使用Unittest对code中各方法的使用以及任务描述的细节是否完成这两方面进行测试。
+
+任务描述：<task>创建具有set_image_preview和get_image_preview两个公共方法方法的VideoPreview类。VideoPreview类使用set_image_preview方法从抖音千川素材库的API接口中得到视频的url，并保存在腾讯云存储桶 (COS) 中 ，保存期限为180天。使用get_image_preview方法实现当用户请求url时返回COS存储地址，如果过期重新尝试存储；如果获取失败则报错。<task> 
+
+不断改进并优化生成的代码code以达到以下要求，如果不清楚某一要求，先学习相关知识：
+1-符合任务描述并可以执行
+2-使用必要的type hints
+3-必须包含必要的try catch函数进行程序的错误处理
+4-添加logging以便记录程序运行时的信息
+5-对任务描述的关键代码添加必要的注释
+6-根据测试用例的返回结果改进
