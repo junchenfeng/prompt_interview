@@ -1,0 +1,9 @@
+1. `set_image_preview(self, image_id: str) -> str`：该方法用于设置图像预览，并将预览图像的URL保存到腾讯云对象存储服务（COS）中。它接受一个图像ID作为参数，并返回保存在COS中的URL。
+
+2. `get_image_preview(self, image_id: str) -> str`：该方法用于获取图像预览的URL。它接受一个图像ID作为参数，并返回从COS中检索到的预览URL。
+
+3. `_get_preview_url(self, image_id: str) -> str`：这是一个私有方法，用于从网络接口（例如抖音千川的素材API）获取图像预览的URL。它接受一个图像ID作为参数，并返回相应的预览URL。
+
+4. `_save_to_cos(self, preview_url: str) -> str`：这是一个私有方法，用于将预览图像保存到腾讯云对象存储服务（COS）中。它接受一个预览URL作为参数，并返回保存在COS中的URL。
+
+5. `_get_cos_url(self, image_id: str) -> str`：这是一个私有方法，用于从腾讯云对象存储服务（COS）中获取图像的URL。它接受一个图像ID作为参数，并返回相应的COS URL。
