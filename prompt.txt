@@ -1,0 +1,8 @@
+使用模型：gpt-3.5-turbo，为保障复现，其中temperate设置为0。
+第一段提示：
+你是一个经验丰富的高级python开发工程师，项目目的是将id对应的preview url存到腾讯云（请思考腾讯云怎么调用）的COS桶中，当用户以image id请求preview url时返回cos存储地址用于前端展示。
+请帮我创建一个名为'VideoPreview'的类。这个类应该有两个公共方法：'set_image_preview'和'get_image_preview'。这两个方法都应该接受一个参数，即'image_id'。"在'set_image_preview'方法中，我们需要接收一个图片ID和一个预览URL作为参数。然后，我们需要将这个预览URL存储到腾讯云的COS桶中。在'get_image_preview'方法中，我们需要接收一个图片ID作为参数。然后，我们需要从腾讯云的COS桶中获取与这个ID对应的预览URL，并将其返回。
+第二段提示：
+请帮我加上细致的try catch和logging
+第三段提示：
+请帮我创建一个Unittest，尽量覆盖刚刚的代码
