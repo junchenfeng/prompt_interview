@@ -1,86 +1,73 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import patch, MagicMock
 from video_preview import VideoPreview
 
 class TestVideoPreview(unittest.TestCase):
     def setUp(self):
         self.secret_id = 'your_secret_id'
         self.secret_key = 'your_secret_key'
-        self.bucket = 'your_bucket_name'
-        self.video_preview = VideoPreview(self.secret_id, self.secret_key, self.bucket)
+        self.region = 'your_region'
+        self.bucket = 'your_bucket'
+        self.video_preview = VideoPreview(self.secret_id, self.secret_key, self.region, self.bucket)
 
     def test_set_image_preview_success(self):
-        # 模拟腾讯云COS客户端的put_object方法返回成功的响应
-        self.video_preview.cos_client.put_object = MagicMock(return_value={
-            'Response': {
-                'Error': {
-                    'Code': 0
-                }
-            }
-        })
+        image_id = '1234'
+        preview_url = 'https://example.com/img.png'
+        image_data = b'image_data'
 
-        image_id = 'image123'
-        preview_url = 'https://example.com/preview.jpg'
-        self.video_preview.set_image_preview(image_id, preview_url)
+        # 模拟请求预览URL返回图片内容
+        with patch('requests.get') as mock_get:
+            mock_response = MagicMock()
+            mock_response.content = image_data
+            mock_get.return_value = mock_response
 
-        # 验证put_object方法是否被调用
-        self.video_preview.cos_client.put_object.assert_called_once()
+            # 模拟保存图片到COS桶成功
+            with patch('qcloud_cos.CosS3Client.put_object') as mock_put_object:
+                mock_response.raise_for_status.return_value = None
 
-    def test_set_image_preview_error(self):
-        # 模拟腾讯云COS客户端的put_object方法返回错误的响应
-        self.video_preview.cos_client.put_object = MagicMock(return_value={
-            'Response': {
-                'Error': {
-                    'Code': -1,
-                    'Message': 'Internal Server Error'
-                }
-            }
-        })
+                # 调用set_image_preview方法
+                result = self.video_preview.set_image_preview(image_id, preview_url)
 
-        image_id = 'image123'
-        preview_url = 'https://example.com/preview.jpg'
-        self.video_preview.set_image_preview(image_id, preview_url)
+                # 验证返回的图片地址是否符合预期
+                expected_url = f"https://{self.bucket}.cos.{self.region}.myqcloud.com/{image_id}.png"
+                self.assertEqual(result, expected_url)
 
-        # 验证put_object方法是否被调用
-        self.video_preview.cos_client.put_object.assert_called_once()
+    def test_set_image_preview_failure(self):
+        image_id = '1234'
+        preview_url = 'https://example.com/img.png'
+
+        # 模拟请求预览URL失败
+        with patch('requests.get') as mock_get:
+            mock_get.side_effect = Exception('Failed to get preview URL')
+
+            # 调用set_image_preview方法
+            result = self.video_preview.set_image_preview(image_id, preview_url)
+
+            # 验证返回的图片地址是否为空字符串
+            self.assertEqual(result, '')
 
     def test_get_image_preview_success(self):
-        # 模拟腾讯云COS客户端的get_object方法返回成功的响应
-        self.video_preview.cos_client.get_object = MagicMock(return_value={
-            'Response': {
-                'Error': {
-                    'Code': 0
-                }
-            },
-            'Body': MagicMock(get_raw_stream=MagicMock(return_value=MagicMock(url='https://example.com/preview.jpg')))
-        })
+        image_id = '1234'
 
-        image_id = 'image123'
-        preview_url = self.video_preview.get_image_preview(image_id)
+        # 调用get_image_preview方法
+        result = self.video_preview.get_image_preview(image_id)
 
-        # 验证get_object方法是否被调用
-        self.video_preview.cos_client.get_object.assert_called_once()
-        # 验证返回的预览URL是否正确
-        self.assertEqual(preview_url, 'https://example.com/preview.jpg')
+        # 验证返回的图片地址是否符合预期
+        expected_url = f"https://{self.bucket}.cos.{self.region}.myqcloud.com/{image_id}.png"
+        self.assertEqual(result, expected_url)
 
-    def test_get_image_preview_error(self):
-        # 模拟腾讯云COS客户端的get_object方法返回错误的响应
-        self.video_preview.cos_client.get_object = MagicMock(return_value={
-            'Response': {
-                'Error': {
-                    'Code': -1,
-                    'Message': 'Internal Server Error'
-                }
-            }
-        })
+    def test_get_image_preview_failure(self):
+        image_id = '1234'
 
-        image_id = 'image123'
-        preview_url = self.video_preview.get_image_preview(image_id)
+        # 调用get_image_preview方法时抛出异常
+        with patch('qcloud_cos.CosS3Client.put_object') as mock_put_object:
+            mock_put_object.side_effect = Exception('Failed to get image preview')
 
-        # 验证get_object方法是否被调用
-        self.video_preview.cos_client.get_object.assert_called_once()
-        # 验证返回的预览URL是否为None
-        self.assertIsNone(preview_url)
+            # 调用get_image_preview方法
+            result = self.video_preview.get_image_preview(image_id)
+
+            # 验证返回的图片地址是否为空字符串
+            self.assertEqual(result, '')
 
 if __name__ == '__main__':
     unittest.main()
