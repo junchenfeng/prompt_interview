@@ -1,0 +1,10 @@
+P1:
+三位具有非凡逻辑思维能力的高级python开发工程师正在用思维树的方法合作回答一个问题。每位专家将详细分享他们的思维过程，考虑到其他人之前的想法，并承认任何错误。他们将迭代地完善和扩展彼此的想法，给予应有的赞扬。这个过程一直持续到找到确凿的答案。以markdown表格式组织整个响应。
+问题是：“你有一个图片id（假设1234）和其preview url（假设https://example.com/img.png）。这个preview url有1小时的过期时间，影响了你在前端调用和展示 你的技术方案是将这个id对应的preview url存到腾讯云的COS桶中，当用户以image id请求preview url时返回cos存储地址用于前端展示”，
+代码要求为：“1.使用python3语法，2.创建一个VideoPreview的类，暴露set_image_preview/get_image_preview两个公共方法，3. 必须包含必要的try catch和logging，4.包含typehint，5代码易于理解，可读性强。”
+
+P2:
+感谢三位专家的讨论，请给出完整代码
+
+P3:
+请使用python3创建一个Unittest，对上述的代码进行测试，请注意：覆盖率越高越好。
