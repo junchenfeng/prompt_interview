@@ -5,6 +5,6 @@
 项目目的：实现一个腾讯云存储与预览功能，从图片id对应的preview url中获取图片存到腾讯云的COS桶中，当用户以image id请求preview url时返回cos桶的存储地址用于前端展示。
 代码大纲：创建一个名为'VideoPreview'的类。这个类应该有两个公共方法：'set_image_preview'（用于从image id对应的预览URL中获取图片，并将这个图像保存到腾讯云存储桶（COS）），'get_image_preview'（在用户用image id查询时，返回保存在COS桶中的视频预览图像的存储地址）。
 代码细节要求：1.使用python3语法；2. 代码可读性强；3. 请增加type hint；4. 必须包含必要的try catch和logging用于尽可能全面详细的处理异常。
-注意事项：请注意腾讯云存储桶（COS）的调用方法。
+注意事项：1. 请注意腾讯云存储桶（COS）的调用方法。 2. 请注意日志logging的恰当配置。
 第二段提示：
 请使用python3创建一个Unittest，对刚刚的代码进行测试，注意：覆盖率越高越好。
